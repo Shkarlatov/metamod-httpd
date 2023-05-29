@@ -14,7 +14,7 @@ set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 set(COMPILE_FLAGS "-m32 -U_FORTIFY_SOURCE")
 set(LINK_FLAGS "-m32")
 
-set(COMPILE_FLAGS "${COMPILE_FLAGS} -Wall -fno-exceptions -fno-builtin -Wno-unknown-pragmas")
+set(COMPILE_FLAGS "${COMPILE_FLAGS} -Wall -fexceptions -fno-builtin -Wno-unknown-pragmas")
 
 # Remove noxref code and data
 set(COMPILE_FLAGS "${COMPILE_FLAGS} -ffunction-sections -fdata-sections")
