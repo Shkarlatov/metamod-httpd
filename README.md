@@ -1,4 +1,17 @@
-# SafeNameAndChat [![Download](https://camo.githubusercontent.com/1c836b9a3bc97bddd0d35f531833ce0eab6f1a82c69bc47987a3068b4d1197ed/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f72656c656173652f57504d4750526f53546f54654d612f536166654e616d65416e64436861742e737667)](https://github.com/WPMGPRoSToTeMa/SafeNameAndChat/releases/latest) [![Downloads](https://camo.githubusercontent.com/d12eaaf6643e932e38e267852f633a581423216858bc1bb7ab7bfa9d1654f419/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f646f776e6c6f6164732f57504d4750526f53546f54654d612f536166654e616d65416e64436861742f746f74616c3f636f6c6f723d696d706f7274616e74)]() [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# HTTPD
+
+Metamod module for serve static files for fastdl.
+
+## Install
+Install as metamod plugins. Example `cstrike\addons\httpd\httpd.dll`
+Create a configuration file with paths listed: `cstrike\addons\httpd\httpd.cfg`
+```
+ ./cstrike
+ ./cstrike_addon
+ ./cstrike_downloads
+```
+
+Searching for files in directories depends on their order in the settings
 
 ## Build instructions
 ### Checking requirements
@@ -21,7 +34,7 @@ LLVM (Clang) >= 6.0 (Optional)
 ### Building
 
 #### Windows
-Use `Visual Studio` to build, open `SafeNameAndChat.sln` and just select from the solution configurations list `Release` or `Debug` and platform x86
+Use `Visual Studio` to build, open `httpd.sln` and just select from the solution configurations list `Release` or `Debug` and platform x86
 
 #### Linux
 
