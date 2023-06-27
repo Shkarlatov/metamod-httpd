@@ -15,7 +15,7 @@ Searching for files in directories depends on their order in the settings
 
 ## Build instructions
 ### Checking requirements
-There are several software requirements for building SafeNameAndChat:
+There are several software requirements for building HTTPD:
 
 #### Windows
 <pre>
