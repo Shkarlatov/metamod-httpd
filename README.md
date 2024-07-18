@@ -13,6 +13,14 @@ Create a configuration file with paths listed: `cstrike\addons\httpd\httpd.cfg`
 
 Searching for files in directories depends on their order in the settings
 
+Set `sv_downloadurl "http://localhost/"`  or your public ip address for working fastdl.
+
+WARNING!!! 
+
+The plugin was developed only for local play. public use is fraught with vulnerabilities and server hijacking. 
+Directories and files specified in the config will be available without checking access rights!!!
+
+
 ## Build instructions
 ### Checking requirements
 There are several software requirements for building HTTPD:
