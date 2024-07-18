@@ -63,11 +63,11 @@ void NormalizePath(char *path)
 
 plugin_info_t Plugin_info = {
 	META_INTERFACE_VERSION, // ifvers
-	"httpd",      // name
-	CPPHTTPLIB_VERSION,         // version
-	"2023.01.01",           // date
+	"HTTPD",      // name
+	"0.2",         // version
+	"18.07.2024",           // date
 	"Aly4",     // author
-	"https://github.com/yhirose/cpp-httplib", // url
+	"https://github.com/Shkarlatov/metamod-httpd", // url
 	"HTTPD",                 // logtag, all caps please
 	PT_ANYTIME,             // (when) loadable
 	PT_ANYTIME,             // (when) unloadable
