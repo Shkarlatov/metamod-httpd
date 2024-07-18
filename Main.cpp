@@ -63,8 +63,8 @@ void NormalizePath(char *path)
 
 plugin_info_t Plugin_info = {
 	META_INTERFACE_VERSION, // ifvers
-	"HTTPD",      // name
-	"0.2",         // version
+	"httpd",      // name
+	"0.2.1",         // version
 	"18.07.2024",           // date
 	"Aly4",     // author
 	"https://github.com/Shkarlatov/metamod-httpd", // url
