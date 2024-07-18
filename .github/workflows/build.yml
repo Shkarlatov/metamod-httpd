@@ -12,6 +12,9 @@ on:
     types: [published]
   workflow_dispatch:
 
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
 jobs:
   windows:
     name: 'Windows'
@@ -93,6 +96,14 @@ jobs:
         with:
           name: win32
 
+      - name: Packaging
+        run: |
+          mkdir -p addons/httpd/
+          echo "./cstrike" >> addons/httpd/httpd.cfg
+          mv bin/linux32/httpd.so addons/httpd/
+          mv bin/win32/httpd.dll addons/httpd/
+          7z a -tzip httpd-${{ github.ref_name }}.zip addons
+
       - name: Publish artifacts
         uses: softprops/action-gh-release@v0.1.15
         id: publish-job
@@ -102,5 +113,4 @@ jobs:
           startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            bin/linux32/httpd.so
-            bin/win32/httpd.dll
+            *.zip

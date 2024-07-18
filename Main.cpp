@@ -1,23 +1,12 @@
 ﻿#include <extdll.h>
 #include <meta_api.h>
 #include "Main.h"
-// #include <string>
-// #include <algorithm>
-// #include <cctype>
-// #include <memory>
-// #include <vector>
-// #include <string>
+
 #include <thread>
 #include <fstream>
 
-using namespace std;
-using namespace httplib;
-
-
 enginefuncs_t g_engfuncs;
 globalvars_t *gpGlobals;
-
-
 
 C_DLLEXPORT
 #ifdef _WIN32
@@ -53,34 +42,10 @@ void GiveFnptrsToDll(enginefuncs_t *pEngFuncs, globalvars_t *pGlobalVars) {
 }
 
 
-
 template <typename T>
 T Min(T a, T b) {
 	return (a < b) ? a : b;
 }
-
-// size_t GetPluginRelPath(char *path, size_t maxPathLength) {
-// 	const char *pluginAbsPath = GET_PLUGIN_PATH(PLID);
-// 	const char *gamedirAbsPath = GET_GAME_INFO(PLID, GINFO_GAMEDIR);
-// 	const char *pluginRelPath = &pluginAbsPath[0 + 1]; // + slash
-
-// 	// Find last slash
-// 	const char *searchChar = pluginRelPath + strlen(pluginRelPath) - 1; // go to string end
-
-// 	while (true) {
-// 		if (*searchChar == '/' || *searchChar == '\\') {
-// 			break; // ok we found it
-// 		}
-
-// 		searchChar--;
-// 	}
-
-// 	size_t charsToCopy = Min((size_t)searchChar - (size_t)pluginRelPath + 1, maxPathLength); // with slash
-// 	strncpy(path, pluginRelPath, charsToCopy);
-// 	path[charsToCopy] = '\0';
-
-// 	return charsToCopy;
-// }
 
 void NormalizePath(char *path)
 {
@@ -98,11 +63,11 @@ void NormalizePath(char *path)
 
 plugin_info_t Plugin_info = {
 	META_INTERFACE_VERSION, // ifvers
-	"httpd",      // name
-	CPPHTTPLIB_VERSION,         // version
-	"2023.01.01",           // date
+	"HTTPD",      // name
+	"0.2",         // version
+	"18.07.2024",           // date
 	"Aly4",     // author
-	"https://github.com/yhirose/cpp-httplib", // url
+	"https://github.com/Shkarlatov/metamod-httpd", // url
 	"HTTPD",                 // logtag, all caps please
 	PT_ANYTIME,             // (when) loadable
 	PT_ANYTIME,             // (when) unloadable
@@ -120,12 +85,22 @@ C_DLLEXPORT int Meta_Query(char *pchInterfaceVersion, plugin_info_t **pPluginInf
 }
 
 
-thread* th;
-Server* svr;
+std::thread* th;
+httplib::Server* svr;
 
-void StartSRV(){
-    svr = new Server();
-	// load config
+void DEBUG_PRNT( const char *fmt, ...){
+	char logstring[2048];
+
+	va_list argptr;
+	va_start(argptr, fmt);
+	vsnprintf(logstring, sizeof(logstring), fmt, argptr);
+	va_end(argptr);
+
+	SERVER_PRINT(logstring);
+}
+
+void Listen(){
+    svr = new httplib::Server();
     
 	char g_ExecConfigCmd[PATH_MAX];
 	const char *pszGameDir = GET_GAME_INFO(PLID, GINFO_GAMEDIR);
@@ -142,40 +117,32 @@ void StartSRV(){
 	}
 
 	snprintf(g_ExecConfigCmd, sizeof(g_ExecConfigCmd), "cstrike/%s%s.cfg", szRelativePath, Plugin_info.name);
+	DEBUG_PRNT("HTTPD: config file path : %s\n",g_ExecConfigCmd);
 
-    //SERVER_PRINT(g_ExecConfigCmd);
-
-	ifstream file;
-	file.open(g_ExecConfigCmd);
-    std::string line;
-    while (std::getline(file, line)) {		
-		svr->set_mount_point("/", line);
-    };
-	file.close();
-
-    svr->listen("0.0.0.0", 80);
-}
-void StopSRV(){
-	if(svr){
-		svr->stop();
+	std::ifstream file(g_ExecConfigCmd);
+	if (file.is_open()) {
+    	std::string line;
+    	while (std::getline(file, line)) {
+			DEBUG_PRNT("HTTPD: load config line: %s\n",line.c_str());
+			svr->set_mount_point("/", line.c_str());
+    	}
+    	file.close();
 	}
+	svr->listen("0.0.0.0", 80);
 }
 
 C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
-	StopSRV();
+	if(svr){
+		svr->stop();
+	}
 	return TRUE;
 }
 
 C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
-	// pFunctionTable->pfnGetEntityAPI2 = &GetEntityAPI2;
-	// pFunctionTable->pfnGetEntityAPI2_Post = &GetEntityAPI2_Post;
-
 	gpMetaGlobals = pMGlobals;
 	gpGamedllFuncs = pGamedllFuncs;
-
-	th = new thread(StartSRV);
+	th = new std::thread(Listen);
 	th->detach();
-
 	return TRUE;
 }
 
