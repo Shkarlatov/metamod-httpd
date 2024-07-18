@@ -27,6 +27,11 @@ endif()
 
 set(COMPILE_FLAGS "${COMPILE_FLAGS} -msse2 -fno-rtti -fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections")
 
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+
+
 # Check Intel C++ compiler
 if ("$ENV{CXX}" MATCHES "icpc")
 	set(COMPILE_FLAGS "${COMPILE_FLAGS} \
@@ -98,6 +103,7 @@ target_link_libraries(httpd PRIVATE
 	rt
 	m
 	dl
+	Threads::Threads
 )
 
 if (USE_STATIC_LIBSTDC)
